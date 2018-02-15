@@ -5,6 +5,7 @@ import threading
 import sys
 import re
 from tools.tools import dw_file,test_get
+import os
 a_list_array = []#1级目录的数组
 b_list_array = []#2级数组
 B = threading.Event()
@@ -88,6 +89,13 @@ class dw_imgs() :
             req.start()
             if re.search('Sorry, DeviantArt does not serve',req.text) != None :
                 break#如果文件不存在就退出循环
+            try :
+                LE = len(os.listdir('./图片'+self.dir_name))
+                print('./图片'+self.dir_name+str(LE)+'有张图片')
+                if LE >= 5000 :
+                    break
+            except Exception :
+                pass
             html = BeautifulSoup(req.text,"html.parser")
             img_array = html.select('.torpedo-thumb-link img')
             #print(img_array)
@@ -99,7 +107,7 @@ class dw_imgs() :
 #def d() :
 #    dw_imgs().dw_imgs()
 N = 0
-while N < 50 :
+while N < 300 :
     T = threading.Thread(target=dw_imgs().dw_imgs,args=())
     T.start()
     N+=1
